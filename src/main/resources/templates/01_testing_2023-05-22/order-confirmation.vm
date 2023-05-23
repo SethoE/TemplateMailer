@@ -1,0 +1,20 @@
+Subject: Order Confirmation
+
+Dear $customerName,
+
+Thank you for your recent order. Here are the details:
+
+Order ID: $orderId
+Date: $orderDate
+
+Items:
+#foreach ($item in $orderItems)
+- $item.name: $item.price
+#end
+
+Total: $totalAmount
+
+Please let us know if you have any questions.
+
+Best regards,
+Schwarz IT KG
