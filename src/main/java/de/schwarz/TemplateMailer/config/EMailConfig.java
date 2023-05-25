@@ -45,7 +45,7 @@ public class EMailConfig {
         return mailSender;
     }
 
-    public String setTemplateId(String templateID) {
-        return templateID;
+    public String getTemplateId() {
+       throw new NotImplementedException();
     }
 }
