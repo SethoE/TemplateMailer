@@ -1,21 +1,12 @@
 # How to create a new email template
 
-1. Use script
-2. 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+### Folder naming convention:
+#### ID_TemplatingName_CreationDate
+-  ID: Unique identifier for the template.
+- TemplatingName: Name of the template.
+- CreationDate: Date when the folder is created, preferably in a format like YYYY-MM-DD.
+Example: 001_welcome_email_2023-05-25
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests.
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better.
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+### How you create a new folder:
+1. Use script 
+2. Enter templating name

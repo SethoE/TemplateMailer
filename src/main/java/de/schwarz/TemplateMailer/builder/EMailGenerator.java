@@ -7,10 +7,13 @@ import de.schwarz.TemplateMailer.model.EMail;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Value;
 
 
 public class EMailGenerator {
 
+        @Value("${template.config.folder}")
+        private String templateConfigFolder;
         private String subject;
         private String mailTo;
         private String mailFrom;
@@ -32,50 +35,52 @@ public class EMailGenerator {
             this.velocityEngine = new VelocityEngine(properties);
         }
 
-        public EMailGenerator Subject(String subject) {
+        public EMailGenerator subject(String subject) {
             this.subject = subject;
             return this;
         }
 
-        public EMailGenerator To(String to) {
+        public EMailGenerator to(String to) {
             this.mailTo = to;
             return this;
         }
 
-        public EMailGenerator From(String from) {
+        public EMailGenerator from(String from) {
             this.mailFrom = from;
             return this;
         }
 
-        public EMailGenerator Template(String template) {
+        public EMailGenerator template(String template) {
             this.template = template;
             return this;
         }
 
-        public EMailGenerator AddContext(String key, String value) {
+        public EMailGenerator addContext(String key, String value) {
             velocityContext.put(key, value);
             return this;
         }
 
-        public EMailGenerator AddContext(String key, Object value) {
+        public EMailGenerator addContext(String key, Object value) {
             velocityContext.put(key, value);
             return this;
         }
 
         public EMail createMail() throws IllegalArgumentException {
-            final Template templateEngine = velocityEngine.getTemplate("templates/" + this.template);
-            final StringWriter stringWriter = new StringWriter();
-            templateEngine.merge(this.velocityContext, stringWriter);
             if(this.mailTo.isEmpty() || this.mailFrom.isEmpty()) {
                 throw new IllegalArgumentException("Missing mail headers");
             }
-            final EMail eMail = new EMail();
-            eMail.setMailTo(this.mailTo);
-            eMail.setMailFrom(this.mailFrom);
-            eMail.setMailContent(stringWriter.toString());
-            eMail.setMailSubject(this.subject);
 
-            return eMail;
+            final Template templateEngine = velocityEngine.getTemplate(templateConfigFolder + this.template);
+            final StringWriter stringWriter = new StringWriter();
+            templateEngine.merge(this.velocityContext, stringWriter);
+
+            final EMail email = new EMail();
+            email.setMailTo(this.mailTo);
+            email.setMailFrom(this.mailFrom);
+            email.setMailContent(stringWriter.toString());
+            email.setMailSubject(this.subject);
+
+            return email;
         }
 }
 

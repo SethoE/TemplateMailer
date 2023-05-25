@@ -1,46 +1,55 @@
 package de.schwarz.TemplateMailer.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schwarz.TemplateMailer.builder.EMailGenerator;
 import de.schwarz.TemplateMailer.model.EMail;
 import de.schwarz.TemplateMailer.services.EMailService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 
 @RestController
 public class EMailController {
-
     private final EMailService emailService;
-    private final String mailTo;
 
-    public EMailController(EMailService emailService, @Value("${mail.to}") String mailTo) {
+    public EMailController(EMailService emailService) {
         this.emailService = emailService;
-        this.mailTo = mailTo;
     }
 
-    // Send a simple HTML email to the mail.to
-    @RequestMapping(value ="/test")
-    public String sendTestReport(HttpServletRequest request){
-        final EMail mail = new EMailGenerator()
-                .From("ehrmannsetho@gmail.com") // For gmail, this field is ignored.
-                .To(this.mailTo)
-                .Template("mail-template.html")
-                .AddContext("subject", "Test Email")
-                .AddContext("content", "Hello World!")
-                .Subject("Hello")
-                .createMail();
-        String responseMessage = request.getRequestURI();
+    @PostMapping("/sendEmail")
+    public ResponseEntity<String> sendEmail(@RequestBody String json) {
         try {
-            this.emailService.sendHTMLEmail(mail);
+            // Parse the JSON data
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(json);
+
+            // Extract the templateId and templateData from the JSON
+            String templateId = jsonNode.get("templateId").asText();
+            JsonNode templateData = jsonNode.get("templateData");
+
+            // Build the email using the EMailGenerator
+            EMail mail = new EMailGenerator()
+                    .template(templateId)
+                    .subject("Email Subject") // Customize the subject if needed
+                    .addContext("templateData", templateData)
+                    .createMail();
+
+            // Send the email
+            emailService.sendHTMLEmail(mail);
+
+            return ResponseEntity.ok("Email sent successfully!");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON format!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send email: " + e.getMessage());
         }
-        catch (Exception e) {
-            responseMessage = "Request Unsuccessful \n" + e.getMessage() + "\n" + responseMessage;
-            return responseMessage;
-        }
-        responseMessage = "Request Successful \n" + responseMessage;
-        return responseMessage;
     }
 
     @RequestMapping(value ="/")
