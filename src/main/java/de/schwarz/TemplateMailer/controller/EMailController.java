@@ -26,22 +26,21 @@ public class EMailController {
     @PostMapping("/sendEmail")
     public ResponseEntity<String> sendEmail(@RequestBody String json) {
         try {
-            // Parse the JSON data
+
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(json);
 
-            // Extract the templateId and templateData from the JSON
+
             String templateId = jsonNode.get("templateId").asText();
             JsonNode templateData = jsonNode.get("templateData");
 
-            // Build the email using the EMailGenerator
+
             EMail mail = new EMailGenerator()
                     .template(templateId)
-                    .subject("Email Subject") // Customize the subject if needed
+                    .subject("Email Subject")
                     .addContext("templateData", templateData)
                     .createMail();
 
-            // Send the email
             emailService.sendHTMLEmail(mail);
 
             return ResponseEntity.ok("Email sent successfully!");

@@ -1,0 +1,14 @@
+Subject: Account Status Update
+
+Dear $username,
+
+#if ($accountStatus == "active")
+We are pleased to inform you that your account is now active. You can start enjoying our services immediately.
+#elseif ($accountStatus == "suspended")
+We regret to inform you that your account has been suspended due to a violation of our terms of service. Please contact our support team for further assistance.
+#else
+We are currently reviewing your account and will provide an update shortly.
+#end
+
+Best regards,
+Your Company
