@@ -3,6 +3,8 @@ import java.io.StringWriter;
 import java.util.Properties;
 
 
+import de.schwarz.TemplateMailer.manager.EmailTemplate;
+import de.schwarz.TemplateMailer.manager.TemplateManager;
 import de.schwarz.TemplateMailer.model.EMail;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -21,7 +23,10 @@ public class EMailGenerator {
         private final VelocityContext velocityContext;
         private final VelocityEngine velocityEngine;
 
-        public EMailGenerator() {
+        private EmailTemplate emailTemplate;
+
+        public EMailGenerator(EmailTemplate emailTemplate) {
+
             this.mailTo = "";
             this.mailFrom = "";
             this.subject = "";
@@ -55,10 +60,6 @@ public class EMailGenerator {
             return this;
         }
 
-        public EMailGenerator addContext(String key, String value) {
-            velocityContext.put(key, value);
-            return this;
-        }
 
         public EMailGenerator addContext(String key, Object value) {
             velocityContext.put(key, value);
@@ -70,14 +71,13 @@ public class EMailGenerator {
                 throw new IllegalArgumentException("Missing mail headers");
             }
 
-            final Template templateEngine = velocityEngine.getTemplate(templateConfigFolder + this.template);
-            final StringWriter stringWriter = new StringWriter();
-            templateEngine.merge(this.velocityContext, stringWriter);
+            template =  emailTemplate.generate(); // Parse string and get subject etc.
+
 
             final EMail email = new EMail();
             email.setMailTo(this.mailTo);
             email.setMailFrom(this.mailFrom);
-            email.setMailContent(stringWriter.toString());
+            email.setMailContent(template);
             email.setMailSubject(this.subject);
 
             return email;

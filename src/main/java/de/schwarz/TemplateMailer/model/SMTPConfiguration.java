@@ -9,7 +9,7 @@ public class SMTPConfiguration {
         private boolean starttls;
         private boolean debug;
 
-        // Getters and setters
+
 
         @Override
         public String toString() {

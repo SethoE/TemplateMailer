@@ -3,6 +3,8 @@ package de.schwarz.TemplateMailer.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schwarz.TemplateMailer.builder.EMailGenerator;
+import de.schwarz.TemplateMailer.manager.EmailTemplate;
+import de.schwarz.TemplateMailer.manager.TemplateManager;
 import de.schwarz.TemplateMailer.model.EMail;
 import de.schwarz.TemplateMailer.services.EMailService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +20,11 @@ import java.io.IOException;
 @RestController
 public class EMailController {
     private final EMailService emailService;
+    private TemplateManager templateManager;
 
-    public EMailController(EMailService emailService) {
+    public EMailController(EMailService emailService, TemplateManager templateManager) {
         this.emailService = emailService;
+        this.templateManager = templateManager;
     }
 
     @PostMapping("/sendEmail")
@@ -32,10 +36,18 @@ public class EMailController {
 
 
             String templateId = jsonNode.get("templateId").asText();
+
+
+            EmailTemplate emailTemplate = templateManager.resolveTemplate(templateId); // Throws template not found exception
+
+            // @ControllerAdvice
+
+            // template get
+
             JsonNode templateData = jsonNode.get("templateData");
 
 
-            EMail mail = new EMailGenerator()
+            EMail mail = new EMailGenerator(emailTemplate)
                     .template(templateId)
                     .subject("Email Subject")
                     .addContext("templateData", templateData)
