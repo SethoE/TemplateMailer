@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 /**
  * Configures {@link HttpSecurity} for this application.
  */
+
 @Configuration
 public class WebSecurityConfig {
 
@@ -33,3 +34,6 @@ public class WebSecurityConfig {
                 .build();
     }
 }
+
+
+

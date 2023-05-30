@@ -32,7 +32,7 @@ public class EMailController {
     }
 
 
-    @PostMapping("/sendEmail")
+    @PostMapping("/simple/sendEmail")
     public @ResponseBody
     String sendMail(@RequestBody TemplateRequestDTO templateRequestDTO){
 
@@ -62,7 +62,7 @@ public class EMailController {
         }
 
     }
-    @PostMapping("/sendEmail")
+    @PostMapping("/sendEmail/")
     public @ResponseBody
     String sendMailWithObject(@RequestBody TemplateRequestWithObject templateRequestWithObject){
 
