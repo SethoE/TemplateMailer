@@ -1,4 +1,4 @@
-package de.schwarz.TemplateMailer.model;
+package de.schwarz.templateMailer.model;
 
 public class EMail {
     private String mailFrom;

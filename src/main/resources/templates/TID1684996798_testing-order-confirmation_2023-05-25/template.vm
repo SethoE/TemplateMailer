@@ -1,20 +1,34 @@
 Subject: Order Confirmation
 
-Dear $customerName,
+<p>Dear $customerName,</p>
 
-Thank you for your recent order. Here are the details:
+<p>Thank you for your recent order. Here are the details:</p>
+<p>
+Order ID: $orderId <br/>
+Date: $orderDate <br/>
+</p>
 
-Order ID: $orderId
-Date: $orderDate
+<p>Items:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Item Name</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    #foreach ($item in $orderItems)
+    <tr>
+      <td>$item.name</td>
+      <td>$item.price</td>
+    </tr>
+    #end
+  </tbody>
+</table>
 
-Items:
-#foreach ($item in $orderItems)
-- $item.name: $item.price
-#end
+Total: <span>$totalAmount</span>
 
-Total: $totalAmount
+<p>Please let us know if you have any questions.</p>
 
-Please let us know if you have any questions.
-
-Best regards,
-Schwarz IT KG
+<p>Best regards,<br/>
+Schwarz IT KG</p>

@@ -1,6 +1,5 @@
-package de.schwarz.TemplateMailer.config;
+package de.schwarz.templateMailer.config;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,21 +11,23 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
-public class EMailConfig {
+public class EmailConfig {
+
+    @Value("${smtp.file.path}")
+    private String smtpFilePath;
 
 
-    private static final String SMTP_PROPERTIES_FILE_NAME = "/smtp.properties";
 
-    @Value("${template.config.folder}")
-    private String templateConfigFolder;
 
     @Bean
     public JavaMailSender javaMailSender() throws IOException {
+
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         Properties smtpProperties = new Properties();
-        String templateFolder = templateConfigFolder + "/" + getTemplateId();
-        smtpProperties.load(new FileInputStream(templateFolder + SMTP_PROPERTIES_FILE_NAME));
+
+        smtpProperties.load(new FileInputStream(this.smtpFilePath));
 
 
         mailSender.setHost(smtpProperties.getProperty("mail.smtp.host"));
@@ -45,7 +46,13 @@ public class EMailConfig {
         return mailSender;
     }
 
-    public String getTemplateId() {
-       throw new NotImplementedException();
+
+    public void setSmtpFilePath(String smtpFilePath) {
+        this.smtpFilePath = smtpFilePath;
+    }
+
+    public String getSmtpFilePath() {
+        return smtpFilePath;
     }
 }
+

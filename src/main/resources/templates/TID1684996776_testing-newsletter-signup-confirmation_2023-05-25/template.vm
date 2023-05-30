@@ -1,8 +1,11 @@
 Subject: Hello $name,
 
-Dear $name,
+<p>Dear $name,</p>
 
-Thank you for signing up for our newsletter. We are excited to have you on board!
 
-Best regards,
+<p>Thank you for signing up for our newsletter. We are excited to have you on board!</p>
+
+<p>Best regards,
+<br>
 Schwarz IT KG
+</p>
